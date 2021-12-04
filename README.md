@@ -3,13 +3,8 @@
 
 ## DISCLAIMER: DO NOT USE CODE IN THIS REPO AS IS
 ~
-## ALL THE CODE IN THIS REPO HAS BUGS
+### All the code in this repo has bugs. This is for all means and purpose psuedo code. None of the code here is properly organized or initialized and all error handling is missing. There are no tests.
 ~
-## THIS IS FOR ALL MEANS AND PURPOSE PSUEDO CODE.
-~
-## NONE OF THE CODE HERE IS PROPERLY ORGANIZED OR INITIALIZED AND ALL ERROR HANDLING IS MISSING.
-~
-## THIS REPO WAS ONLY INTENDED TO HIGHLIGHT SOME OF THE COMPONENTS THAT WE USE AT ZILLOW AND IS NOT COMPLETE.
-~
+### This repo was only intended to highlight some of the components that we use at Zillow and is not complete.
 
-## THIS IS ONLY USABLE AS A REFERENCE TO THE "how we go at zillow" TALK AT GOPHERCON2021
+### This is only usable as a reference to the "how we go at zillow" talk at gophercon2021
