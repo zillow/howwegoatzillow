@@ -10,6 +10,8 @@ require (
 	github.com/miracl/conflate v1.2.1
 	github.com/opentracing-contrib/go-stdlib v1.0.0
 	github.com/opentracing/opentracing-go v1.2.0
+	github.com/pkg/errors v0.9.1
+	github.com/sony/gobreaker v0.5.0
 	github.com/swaggo/http-swagger v1.1.2
 	go.uber.org/zap v1.19.1
 	gopkg.in/DataDog/dd-trace-go.v1 v1.34.0
