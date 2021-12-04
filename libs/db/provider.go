@@ -11,11 +11,6 @@ import (
 	sqltrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/database/sql"
 )
 
-var (
-	dbMtx   sync.RWMutex
-	dbCache = make(map[string]*sqlx.DB)
-)
-
 /*
 'postgres' driver is registered from lib/pq/conn.go init
 */
@@ -56,18 +51,18 @@ func (p *provider) Get(ctx context.Context, cfg Config) (*sqlx.DB, error) {
 
 	var db *sqlx.DB
 
-	dbMtx.RLock()
-	db = dbCache[*cfg.ConnectionString]
-	dbMtx.RUnlock()
+	p.dbMtx.RLock()
+	db = p.dbCache[*cfg.ConnectionString]
+	p.dbMtx.RUnlock()
 
 	if db != nil {
 		return db, nil
 	}
 
-	dbMtx.Lock()
-	defer dbMtx.Unlock()
+	p.dbMtx.Lock()
+	defer p.dbMtx.Unlock()
 
-	db = dbCache[*cfg.ConnectionString]
+	db = p.dbCache[*cfg.ConnectionString]
 	if db != nil {
 		return db, nil
 	}
@@ -88,6 +83,6 @@ func (p *provider) Get(ctx context.Context, cfg Config) (*sqlx.DB, error) {
 
 	db = sqlx.NewDb(dbs, driver)
 
-	dbCache[*cfg.ConnectionString] = db
+	p.dbCache[*cfg.ConnectionString] = db
 	return db, nil
 }
