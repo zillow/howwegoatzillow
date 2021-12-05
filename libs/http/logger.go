@@ -8,10 +8,10 @@ import (
 
 // Logger conforms to our.Logger interface
 type Logger interface {
-	Debugw(ctx context.Context, msg string, keysAndValues ...interface{})
-	Infow(ctx context.Context, msg string, keysAndValues ...interface{})
-	Errorw(ctx context.Context, msg string, keysAndValues ...interface{})
-	Warnw(ctx context.Context, msg string, keysAndValues ...interface{})
+	Debug(ctx context.Context, msg string, keysAndValues ...interface{})
+	Info(ctx context.Context, msg string, keysAndValues ...interface{})
+	Error(ctx context.Context, msg string, keysAndValues ...interface{})
+	Warn(ctx context.Context, msg string, keysAndValues ...interface{})
 }
 
 // LeveledLogger conforms to retryablehttp.LeveledLogger interface.
@@ -28,14 +28,14 @@ func NewLeveledLogger(l Logger) LeveledLogger {
 }
 
 func (l LeveledLogger) Error(msg string, keysAndValues ...interface{}) {
-	l.logger.Errorw(context.Background(), msg, keysAndValues...)
+	l.logger.Error(context.Background(), msg, keysAndValues...)
 }
 func (l LeveledLogger) Info(msg string, keysAndValues ...interface{}) {
-	l.logger.Errorw(context.Background(), msg, keysAndValues...)
+	l.logger.Error(context.Background(), msg, keysAndValues...)
 }
 func (l LeveledLogger) Debug(msg string, keysAndValues ...interface{}) {
-	l.logger.Errorw(context.Background(), msg, keysAndValues...)
+	l.logger.Error(context.Background(), msg, keysAndValues...)
 }
 func (l LeveledLogger) Warn(msg string, keysAndValues ...interface{}) {
-	l.logger.Errorw(context.Background(), msg, keysAndValues...)
+	l.logger.Error(context.Background(), msg, keysAndValues...)
 }

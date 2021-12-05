@@ -25,7 +25,7 @@ type DefaultLogger struct {
 }
 
 // NewLogger ...
-func NewLogger(t opentracing.Tracer) (Logger, func() error) {
+func NewLogger(t opentracing.Tracer) (Logger, func()) {
 
 	c := zap.NewProductionConfig()
 
@@ -54,7 +54,7 @@ func NewLogger(t opentracing.Tracer) (Logger, func() error) {
 
 	logger := &DefaultLogger{l: zapLogger.Sugar(), tracer: t}
 
-	return logger, zapLogger.Sync
+	return logger, func() { _ = zapLogger.Sync() }
 }
 
 // Info ...

@@ -82,6 +82,9 @@ func (f *factory) Create(options ...Option) *Server {
 func (s *Server) Serve(ctx context.Context) error { //Take serve options
 	handler := s.getHandler(ctx)
 	port := s.config.Port
+	if port < 1 {
+		port = 8080
+	}
 
 	srvr := http.Server{
 		Addr:         fmt.Sprintf(":%d", port),
