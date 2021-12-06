@@ -13,7 +13,8 @@ import (
 // Everything from here and underneath is this application domain and should we well tested.
 func NewServer(service MyService) *server.Server {
 	s := service.ServerFactory.Create()
-	s.Router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
+	handleRequest := func(w http.ResponseWriter, r *http.Request) {
 		httpClient := service.HTTPClientProvider.GetWrappedClient(service.HTTPConfig)
 		_, _ = httpClient.Get("http://hello.com/")
 
@@ -23,7 +24,9 @@ func NewServer(service MyService) *server.Server {
 		kw, _ := service.KafkaClient.Writer(r.Context(), service.KafkaConfig)
 		_, _ = kw.Write(r.Context(), "apple", []byte("message"))
 		w.WriteHeader(http.StatusNoContent)
-	})
+	}
+
+	s.Router.HandleFunc("/", handleRequest)
 	return s
 }
 
