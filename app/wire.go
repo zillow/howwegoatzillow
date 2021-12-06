@@ -65,9 +65,11 @@ var ZCommonMockSet = wire.NewSet(
 	zhttp.NewClientProvider,
 	wire.Bind(new(zhttp.Logger), new(logger.Logger)),
 	zhttp.NewLeveledLogger,
+
 	mock_kafka.NewMockClient,
 	mock_kafka.NewMockWriter,
+	wire.Bind(new(kafka.Client), new(*mock_kafka.MockClient)),
+
 	mock_db.NewMockProvider,
 	wire.Bind(new(db.Provider), new(*mock_db.MockProvider)),
-	wire.Bind(new(kafka.Client), new(*mock_kafka.MockClient)),
 )
