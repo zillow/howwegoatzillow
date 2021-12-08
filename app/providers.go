@@ -2,12 +2,12 @@ package main
 
 import (
 	"github.com/opentracing/opentracing-go"
-	"github.com/zillow/howegoatzillow/libs/config"
-	"github.com/zillow/howegoatzillow/libs/db"
-	zhttp "github.com/zillow/howegoatzillow/libs/http"
-	"github.com/zillow/howegoatzillow/libs/kafka"
-	"github.com/zillow/howegoatzillow/libs/logger"
-	"github.com/zillow/howegoatzillow/libs/server"
+	"github.com/zillow/howwegoatzillow/libs/config"
+	"github.com/zillow/howwegoatzillow/libs/db"
+	zhttp "github.com/zillow/howwegoatzillow/libs/http"
+	"github.com/zillow/howwegoatzillow/libs/kafka"
+	"github.com/zillow/howwegoatzillow/libs/logger"
+	"github.com/zillow/howwegoatzillow/libs/server"
 	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 )
 

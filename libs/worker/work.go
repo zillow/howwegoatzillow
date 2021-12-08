@@ -9,7 +9,7 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 	"github.com/sony/gobreaker"
-	"github.com/zillow/howegoatzillow/libs/kafka"
+	"github.com/zillow/howwegoatzillow/libs/kafka"
 )
 
 type work struct {

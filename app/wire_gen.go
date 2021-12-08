@@ -8,14 +8,14 @@ package main
 import (
 	"github.com/golang/mock/gomock"
 	"github.com/google/wire"
-	"github.com/zillow/howegoatzillow/libs/config"
-	"github.com/zillow/howegoatzillow/libs/db"
-	"github.com/zillow/howegoatzillow/libs/http"
-	"github.com/zillow/howegoatzillow/libs/kafka"
-	"github.com/zillow/howegoatzillow/libs/logger"
-	"github.com/zillow/howegoatzillow/libs/server"
-	"github.com/zillow/howegoatzillow/mocks/db"
-	"github.com/zillow/howegoatzillow/mocks/kafka"
+	"github.com/zillow/howwegoatzillow/libs/config"
+	"github.com/zillow/howwegoatzillow/libs/db"
+	"github.com/zillow/howwegoatzillow/libs/http"
+	"github.com/zillow/howwegoatzillow/libs/kafka"
+	"github.com/zillow/howwegoatzillow/libs/logger"
+	"github.com/zillow/howwegoatzillow/libs/server"
+	"github.com/zillow/howwegoatzillow/mocks/db"
+	"github.com/zillow/howwegoatzillow/mocks/kafka"
 )
 
 // Injectors from wire.go:
@@ -96,5 +96,5 @@ var ZCommonMockSet = wire.NewSet(
 	NewServerConfig,
 	NewServerFactory, config.NewAppConfig, NewKafkaConfig, logger.NewLogger, NewTracer,
 	NewDbConfig,
-	NewHttpServiceConfig, http.NewClientProvider, wire.Bind(new(http.Logger), new(logger.Logger)), http.NewLeveledLogger, mock_kafka.NewMockClient, mock_kafka.NewMockWriter, mock_db.NewMockProvider, wire.Bind(new(db.Provider), new(*mock_db.MockProvider)), wire.Bind(new(kafka.Client), new(*mock_kafka.MockClient)),
+	NewHttpServiceConfig, http.NewClientProvider, wire.Bind(new(http.Logger), new(logger.Logger)), http.NewLeveledLogger, mock_kafka.NewMockClient, mock_kafka.NewMockWriter, wire.Bind(new(kafka.Client), new(*mock_kafka.MockClient)), mock_db.NewMockProvider, wire.Bind(new(db.Provider), new(*mock_db.MockProvider)),
 )

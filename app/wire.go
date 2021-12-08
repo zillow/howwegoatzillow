@@ -6,14 +6,14 @@ package main
 import (
 	"github.com/golang/mock/gomock"
 	"github.com/google/wire"
-	"github.com/zillow/howegoatzillow/libs/config"
-	"github.com/zillow/howegoatzillow/libs/db"
-	zhttp "github.com/zillow/howegoatzillow/libs/http"
-	"github.com/zillow/howegoatzillow/libs/kafka"
-	"github.com/zillow/howegoatzillow/libs/logger"
-	"github.com/zillow/howegoatzillow/libs/server"
-	mock_db "github.com/zillow/howegoatzillow/mocks/db"
-	mock_kafka "github.com/zillow/howegoatzillow/mocks/kafka"
+	"github.com/zillow/howwegoatzillow/libs/config"
+	"github.com/zillow/howwegoatzillow/libs/db"
+	zhttp "github.com/zillow/howwegoatzillow/libs/http"
+	"github.com/zillow/howwegoatzillow/libs/kafka"
+	"github.com/zillow/howwegoatzillow/libs/logger"
+	"github.com/zillow/howwegoatzillow/libs/server"
+	mock_db "github.com/zillow/howwegoatzillow/mocks/db"
+	mock_kafka "github.com/zillow/howwegoatzillow/mocks/kafka"
 )
 
 func InitializeServer() (*server.Server, func()) {

@@ -6,9 +6,9 @@ import (
 )
 
 func main() {
-	w, cleanup := InitializeServer()
+	server, cleanup := InitializeServer()
 	defer cleanup()
-	if err := w.Serve(context.Background()); err != nil {
+	if err := server.Serve(context.Background()); err != nil {
 		log.Panic(err)
 	}
 }

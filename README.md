@@ -1,4 +1,4 @@
-# howegoatzillow
+# howwegoatzillow
 
 
 ## DISCLAIMER: DO NOT USE CODE IN THIS REPO AS IS

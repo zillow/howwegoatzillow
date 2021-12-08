@@ -10,7 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	sqlx "github.com/jmoiron/sqlx"
-	db "github.com/zillow/howegoatzillow/libs/db"
+	db "github.com/zillow/howwegoatzillow/libs/db"
 )
 
 // MockProvider is a mock of Provider interface.

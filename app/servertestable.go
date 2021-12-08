@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/zillow/howegoatzillow/libs/server"
-	mock_db "github.com/zillow/howegoatzillow/mocks/db"
-	mock_kafka "github.com/zillow/howegoatzillow/mocks/kafka"
+	"github.com/zillow/howwegoatzillow/libs/server"
+	mock_db "github.com/zillow/howwegoatzillow/mocks/db"
+	mock_kafka "github.com/zillow/howwegoatzillow/mocks/kafka"
 )
 
 type ServerTestable struct {

@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	kafka "github.com/zillow/howegoatzillow/libs/kafka"
+	kafka "github.com/zillow/howwegoatzillow/libs/kafka"
 )
 
 // MockClient is a mock of Client interface.

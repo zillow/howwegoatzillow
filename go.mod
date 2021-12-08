@@ -1,4 +1,4 @@
-module github.com/zillow/howegoatzillow
+module github.com/zillow/howwegoatzillow
 
 go 1.17
 

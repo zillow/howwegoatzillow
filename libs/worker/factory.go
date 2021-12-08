@@ -2,7 +2,7 @@ package worker
 
 import (
 	"github.com/opentracing/opentracing-go"
-	"github.com/zillow/howegoatzillow/libs/kafka"
+	"github.com/zillow/howwegoatzillow/libs/kafka"
 )
 
 type Factory struct {

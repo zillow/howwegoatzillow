@@ -3,10 +3,10 @@ package main
 import (
 	"net/http"
 
-	"github.com/zillow/howegoatzillow/libs/db"
-	zhttp "github.com/zillow/howegoatzillow/libs/http"
-	"github.com/zillow/howegoatzillow/libs/kafka"
-	"github.com/zillow/howegoatzillow/libs/server"
+	"github.com/zillow/howwegoatzillow/libs/db"
+	zhttp "github.com/zillow/howwegoatzillow/libs/http"
+	"github.com/zillow/howwegoatzillow/libs/kafka"
+	"github.com/zillow/howwegoatzillow/libs/server"
 )
 
 // This is a very crude representation of what each application looks like.

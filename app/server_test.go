@@ -8,7 +8,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/golang/mock/gomock"
 	"github.com/jmoiron/sqlx"
-	"github.com/zillow/howegoatzillow/libs/kafka"
+	"github.com/zillow/howwegoatzillow/libs/kafka"
 	"gopkg.in/h2non/gock.v1"
 )
 
