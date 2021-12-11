@@ -14,35 +14,6 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// Factory interface to create a server.
-type Factory interface {
-	Create(options ...Option) *Server
-}
-type factory struct {
-	tracer     opentracing.Tracer
-	logger     Logger
-	config     Config
-	routerFunc func() Handler
-}
-
-// NewFactory instantiates a new server Factory
-func NewFactory(options ...FactoryOption) Factory { //Take params as option
-	f := &factory{
-		tracer:     opentracing.NoopTracer{},
-		logger:     NoopLogger{},
-		config:     defaultConfig(),
-		routerFunc: func() Handler { return &http.ServeMux{} },
-	}
-
-	for _, option := range options {
-		if option != nil {
-			option.apply(f)
-		}
-	}
-
-	return f
-}
-
 // Server represents a http server
 type Server struct {
 	Router         Handler
@@ -54,43 +25,42 @@ type Server struct {
 	healthCheck    func(http.HandlerFunc) http.HandlerFunc
 }
 
-func (f *factory) Create(options ...Option) *Server {
-
-	srvr := &Server{
-		tracer: f.tracer,
-		logger: f.logger,
-		config: f.config,
-		Router: f.routerFunc(),
-	}
-
-	for _, option := range options {
-		if option != nil {
-			option.apply(srvr)
-		}
-	}
-
-	srvr.Router.HandleFunc("/live", srvr.getLivenessHandler())
-	srvr.Router.HandleFunc("/ready", srvr.getReadinessHandler())
-	srvr.Router.HandleFunc("/health", srvr.getHealthCheckHandler())
-
-	srvr.addSwagger(srvr.Router)
-
-	return srvr
-}
-
 // Serve sets up a http server and starts listening
-func (s *Server) Serve(ctx context.Context) error { //Take serve options
+func (s *Server) Serve(ctx context.Context) error {
+
+	if s.logger == nil {
+		s.logger = NoopLogger{}
+	}
+	if s.tracer == nil {
+		s.tracer = opentracing.NoopTracer{}
+	}
+
+	s.Router.HandleFunc("/live", s.getLivenessHandler())
+	s.Router.HandleFunc("/ready", s.getReadinessHandler())
+	s.Router.HandleFunc("/health", s.getHealthCheckHandler())
+
+	s.addSwagger(s.Router)
+
 	handler := s.getHandler(ctx)
+	dc := defaultConfig()
 	port := s.config.Port
 	if port < 1 {
-		port = 8080
+		port = dc.Port
+	}
+	rtm := s.config.Port
+	if rtm < 1 {
+		rtm = dc.ReadTimeoutMs
+	}
+	wtm := s.config.Port
+	if wtm < 1 {
+		wtm = dc.WriteTimeoutMs
 	}
 
 	srvr := http.Server{
 		Addr:         fmt.Sprintf(":%d", port),
 		Handler:      handler,
-		ReadTimeout:  time.Duration(s.config.ReadTimeoutMs) * time.Millisecond,
-		WriteTimeout: time.Duration(s.config.WriteTimeoutMs) * time.Millisecond,
+		ReadTimeout:  time.Duration(rtm) * time.Millisecond,
+		WriteTimeout: time.Duration(wtm) * time.Millisecond,
 	}
 
 	errs := make(chan error)
@@ -110,6 +80,14 @@ func (s *Server) Serve(ctx context.Context) error { //Take serve options
 	}()
 
 	return <-errs
+}
+
+func (s *Server) Configure(options ...Option) {
+	for _, option := range options {
+		if option != nil {
+			option.apply(s)
+		}
+	}
 }
 
 func (s *Server) addSwagger(r Handler) {
@@ -172,7 +150,11 @@ func (s *Server) tracingMiddleware() func(http.Handler) http.Handler {
 // TimeoutMiddleware ...
 func (s *Server) timeoutMiddleware() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
-		return http.TimeoutHandler(next, time.Duration(s.config.RequestTimeoutSec)*time.Second, "timeout")
+		rts := s.config.RequestTimeoutSec
+		if rts < 1 {
+			rts = defaultConfig().RequestTimeoutSec
+		}
+		return http.TimeoutHandler(next, time.Duration(rts)*time.Second, "timeout")
 	}
 }
 

@@ -9,9 +9,11 @@ import (
 	"github.com/zillow/howwegoatzillow/libs/server"
 )
 
+type MyServer struct{ *server.Server }
+
 // This is a very crude representation of what each application looks like.
 // Everything from here and underneath is this application domain and should be well tested.
-func NewServer(service MyService) *server.Server {
+func NewMyServer(server *server.Server, service *MyService) *MyServer {
 	handleRequest := func(w http.ResponseWriter, r *http.Request) {
 		httpClient := service.HTTPClientProvider.GetWrappedClient(service.HTTPConfig)
 		_, _ = httpClient.Get("http://hello.com/")
@@ -24,14 +26,11 @@ func NewServer(service MyService) *server.Server {
 		w.WriteHeader(http.StatusNoContent)
 	}
 
-	s := service.ServerFactory.Create()
-	s.Router.HandleFunc("/", handleRequest)
-	return s
+	server.Router.HandleFunc("/", handleRequest)
+	return &MyServer{server}
 }
 
 type MyService struct {
-	ServerFactory server.Factory
-
 	HTTPConfig         zhttp.Config
 	HTTPClientProvider zhttp.Provider
 

@@ -11,25 +11,24 @@ import (
 	zhttp "github.com/zillow/howwegoatzillow/libs/http"
 	"github.com/zillow/howwegoatzillow/libs/kafka"
 	"github.com/zillow/howwegoatzillow/libs/logger"
-	"github.com/zillow/howwegoatzillow/libs/server"
 	mock_db "github.com/zillow/howwegoatzillow/mocks/db"
 	mock_kafka "github.com/zillow/howwegoatzillow/mocks/kafka"
 )
 
-func InitializeServer() (*server.Server, func()) {
+func InitializeServer() (*MyServer, func()) {
 	wire.Build(
 		ZCommonSet,
 		wire.Struct(new(MyService), "*"),
-		NewServer,
+		NewMyServer,
 	)
-	return &server.Server{}, nil
+	return &MyServer{}, nil
 }
 
 func InitializeServerTestable(ctrl *gomock.Controller) (*ServerTestable, func()) {
 	wire.Build(
 		ZCommonMockSet,
 		wire.Struct(new(MyService), "*"),
-		NewServer,
+		NewMyServer,
 		wire.Struct(new(ServerTestable), "*"),
 	)
 	return &ServerTestable{}, nil
@@ -38,7 +37,7 @@ func InitializeServerTestable(ctrl *gomock.Controller) (*ServerTestable, func())
 // This is in a separate common package
 var ZCommonSet = wire.NewSet(
 	NewServerConfig,
-	NewServerFactory,
+	NewServer,
 	config.NewAppConfig,
 	NewKafkaConfig,
 	kafka.NewClient,
@@ -55,7 +54,7 @@ var ZCommonSet = wire.NewSet(
 
 var ZCommonMockSet = wire.NewSet(
 	NewServerConfig,
-	NewServerFactory,
+	NewServer,
 	config.NewAppConfig,
 	NewKafkaConfig,
 	logger.NewLogger,

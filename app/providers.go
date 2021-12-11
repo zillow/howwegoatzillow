@@ -11,16 +11,19 @@ import (
 	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 )
 
-func NewServerFactory(
+func NewServer(
 	config server.Config,
 	logger logger.Logger,
 	tracer opentracing.Tracer,
-) server.Factory {
-	return server.NewFactory(
-		server.WithLogger(logger),
-		server.WithRouter(func() server.Handler {
-			return httptrace.NewServeMux()
-		}))
+) *server.Server {
+	s := server.Server{}
+	s.Configure(
+		server.WithServerLogger(logger),
+		server.WithServerTracer(tracer),
+		server.WithServerConfig(config),
+		server.WithServerRouter(httptrace.NewServeMux()),
+	)
+	return &s
 }
 
 //NOTE NONE OF THESE CONFIGURATIONS ARE CORRECTLY POPULATED HERE.

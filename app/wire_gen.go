@@ -13,19 +13,18 @@ import (
 	"github.com/zillow/howwegoatzillow/libs/http"
 	"github.com/zillow/howwegoatzillow/libs/kafka"
 	"github.com/zillow/howwegoatzillow/libs/logger"
-	"github.com/zillow/howwegoatzillow/libs/server"
 	"github.com/zillow/howwegoatzillow/mocks/db"
 	"github.com/zillow/howwegoatzillow/mocks/kafka"
 )
 
 // Injectors from wire.go:
 
-func InitializeServer() (*server.Server, func()) {
+func InitializeServer() (*MyServer, func()) {
 	appConfig := config.NewAppConfig()
 	serverConfig := NewServerConfig(appConfig)
 	tracer := NewTracer()
 	loggerLogger, cleanup := logger.NewLogger(tracer)
-	factory := NewServerFactory(serverConfig, loggerLogger, tracer)
+	server := NewServer(serverConfig, loggerLogger, tracer)
 	httpConfig := NewHttpServiceConfig(appConfig)
 	leveledLogger := http.NewLeveledLogger(loggerLogger)
 	provider := http.NewClientProvider(tracer, leveledLogger)
@@ -33,8 +32,7 @@ func InitializeServer() (*server.Server, func()) {
 	dbProvider := db.NewProvider()
 	kafkaConfig := NewKafkaConfig(appConfig)
 	client := kafka.NewClient(kafkaConfig, tracer, loggerLogger)
-	myService := MyService{
-		ServerFactory:      factory,
+	myService := &MyService{
 		HTTPConfig:         httpConfig,
 		HTTPClientProvider: provider,
 		DBConfig:           dbConfig,
@@ -42,8 +40,8 @@ func InitializeServer() (*server.Server, func()) {
 		KafkaConfig:        kafkaConfig,
 		KafkaClient:        client,
 	}
-	serverServer := NewServer(myService)
-	return serverServer, func() {
+	myServer := NewMyServer(server, myService)
+	return myServer, func() {
 		cleanup()
 	}
 }
@@ -53,7 +51,7 @@ func InitializeServerTestable(ctrl *gomock.Controller) (*ServerTestable, func())
 	serverConfig := NewServerConfig(appConfig)
 	tracer := NewTracer()
 	loggerLogger, cleanup := logger.NewLogger(tracer)
-	factory := NewServerFactory(serverConfig, loggerLogger, tracer)
+	server := NewServer(serverConfig, loggerLogger, tracer)
 	httpConfig := NewHttpServiceConfig(appConfig)
 	leveledLogger := http.NewLeveledLogger(loggerLogger)
 	provider := http.NewClientProvider(tracer, leveledLogger)
@@ -61,8 +59,7 @@ func InitializeServerTestable(ctrl *gomock.Controller) (*ServerTestable, func())
 	mockProvider := mock_db.NewMockProvider(ctrl)
 	kafkaConfig := NewKafkaConfig(appConfig)
 	mockClient := mock_kafka.NewMockClient(ctrl)
-	myService := MyService{
-		ServerFactory:      factory,
+	myService := &MyService{
 		HTTPConfig:         httpConfig,
 		HTTPClientProvider: provider,
 		DBConfig:           dbConfig,
@@ -70,10 +67,10 @@ func InitializeServerTestable(ctrl *gomock.Controller) (*ServerTestable, func())
 		KafkaConfig:        kafkaConfig,
 		KafkaClient:        mockClient,
 	}
-	serverServer := NewServer(myService)
+	myServer := NewMyServer(server, myService)
 	mockWriter := mock_kafka.NewMockWriter(ctrl)
 	serverTestable := &ServerTestable{
-		Server:     serverServer,
+		Server:     myServer,
 		DBProvider: mockProvider,
 		KProvider:  mockClient,
 		KWriter:    mockWriter,
@@ -88,13 +85,13 @@ func InitializeServerTestable(ctrl *gomock.Controller) (*ServerTestable, func())
 // This is in a separate common package
 var ZCommonSet = wire.NewSet(
 	NewServerConfig,
-	NewServerFactory, config.NewAppConfig, NewKafkaConfig, kafka.NewClient, wire.Bind(new(kafka.Logger), new(logger.Logger)), logger.NewLogger, NewTracer,
+	NewServer, config.NewAppConfig, NewKafkaConfig, kafka.NewClient, wire.Bind(new(kafka.Logger), new(logger.Logger)), logger.NewLogger, NewTracer,
 	NewDbConfig, db.NewProvider, NewHttpServiceConfig, http.NewClientProvider, wire.Bind(new(http.Logger), new(logger.Logger)), http.NewLeveledLogger,
 )
 
 var ZCommonMockSet = wire.NewSet(
 	NewServerConfig,
-	NewServerFactory, config.NewAppConfig, NewKafkaConfig, logger.NewLogger, NewTracer,
+	NewServer, config.NewAppConfig, NewKafkaConfig, logger.NewLogger, NewTracer,
 	NewDbConfig,
 	NewHttpServiceConfig, http.NewClientProvider, wire.Bind(new(http.Logger), new(logger.Logger)), http.NewLeveledLogger, mock_kafka.NewMockClient, mock_kafka.NewMockWriter, wire.Bind(new(kafka.Client), new(*mock_kafka.MockClient)), mock_db.NewMockProvider, wire.Bind(new(db.Provider), new(*mock_db.MockProvider)),
 )
