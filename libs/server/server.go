@@ -47,11 +47,11 @@ func (s *Server) Serve(ctx context.Context) error {
 	if port < 1 {
 		port = dc.Port
 	}
-	rtm := s.config.Port
+	rtm := s.config.ReadTimeoutMs
 	if rtm < 1 {
 		rtm = dc.ReadTimeoutMs
 	}
-	wtm := s.config.Port
+	wtm := s.config.WriteTimeoutMs
 	if wtm < 1 {
 		wtm = dc.WriteTimeoutMs
 	}
