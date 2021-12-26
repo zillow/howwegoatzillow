@@ -7,4 +7,4 @@
 ~
 ### This repo was only intended to highlight some of the components that we use at Zillow and is not complete.
 
-### This is only usable as a reference to the "how we go at zillow" talk at gophercon2021
+### This is only usable as a reference to the "how we go at zillow" talk at gophercon2021 https://youtu.be/9Q1RMueVHAg
